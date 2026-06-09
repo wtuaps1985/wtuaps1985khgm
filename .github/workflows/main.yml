@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK with Docker
 
 on: [push]
 
@@ -6,25 +6,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-      
-      - name: Install dependencies
+      - name: Build APK using Docker
         run: |
-          pip install buildozer==1.6.0
-          pip install kivy
-          pip install pillow
-      
-      - name: Build APK
-        run: |
-          buildozer apk debug
+          docker run --rm -v "$(pwd)":/home/user/app kivy/kivy:master bash -c "cd /home/user/app && buildozer apk debug"
       
       - name: Upload APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: AutoClicker
           path: bin/*.apk
