@@ -1,4 +1,4 @@
-name: Build APK with Docker
+name: Build APK
 
 on: [push]
 
@@ -8,9 +8,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Build APK using Docker
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build APK using Kivy Docker
         run: |
-          docker run --rm -v "$(pwd)":/home/user/app kivy/kivy:master bash -c "cd /home/user/app && buildozer apk debug"
+          docker run --rm -v "${{ github.workspace }}":/home/user/app kivy/kivy:master bash -c "cd /home/user/app && buildozer apk debug"
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
