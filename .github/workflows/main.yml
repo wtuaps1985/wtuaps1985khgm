@@ -4,16 +4,14 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      
-      - name: Build APK using Kivy Docker
-        run: |
-          docker run --rm -v "${{ github.workspace }}":/home/user/app kivy/kivy:master bash -c "cd /home/user/app && buildozer apk debug"
+      - name: Build APK with Kivy Buildozer
+        uses: arturbosch/kivy-action@v1.0.1
+        with:
+          command: buildozer apk debug
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
